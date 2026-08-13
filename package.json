@@ -27,6 +27,14 @@
   "engines": {
     "node": ">=20"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/egnmosk/dsh-browser-bridge.git"
+  },
+  "homepage": "https://github.com/egnmosk/dsh-browser-bridge",
+  "bugs": {
+    "url": "https://github.com/egnmosk/dsh-browser-bridge/issues"
+  },
   "peerDependencies": {
     "@deepseek-ai/dsh-tools": ">=0.1.0"
   }

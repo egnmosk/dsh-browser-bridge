@@ -187,7 +187,7 @@ dsh web
 | `browser_*` не работает на страницах `chrome://`, магазина, `about:` | Браузер запрещает расширениям доступ к служебным страницам — сначала откройте обычный сайт (`browser_navigate`). |
 | Агент не видит инструменты `browser_*` | Инструменты регистрируются на хосте: убедитесь, что сервер перезапущен после установки плагина. |
 | `dsh web` падает сразу после установки: `SyntaxError: Unexpected token '' ... not valid JSON` в `readProfileManifest` | Установщик старой версии записал `package.json` профиля с BOM-символом (PowerShell 5.1 `Set-Content -Encoding UTF8` добавляет BOM, который `JSON.parse` не принимает). **Решение:** обновите `install-plugin.ps1` из репозитория (`git pull`) и запустите ещё раз — он сам уберёт BOM. Либо вручную откройте `%USERPROFILE%\.dsh\profiles\web\package.json` (и `cordis.patch.yml`) в редакторе (VS Code / Notepad++) и сохраните как «UTF-8 без BOM». |
-| При выборе рабочей папки: `Couldn't open folder` / `directory picker failed: win32 folder dialog worker exited before reporting a result` | Нативный диалог выбора папки (`IFileOpenDialog` через koffi в дочернем воркере) не может запуститься на этой машине (обычно из-за отсутствия нативного модуля koffi в профиле). Это штатная проблема DSH, не связана с плагином. **Решение — переключить на браузерный выбор папки** (работает везде, без нативных модулей): добавьте в `%USERPROFILE%\.dsh\profiles\web\cordis.patch.yml` и перезапустите `dsh web`:
+| При выборе рабочей папки: `Couldn't open folder` / `directory picker failed: win32 folder dialog worker exited before reporting a result` | Нативный диалог выбора папки (`IFileOpenDialog` через koffi в дочернем воркере) не может открыться. На **Windows Server** (2019 и новее — RDP-сессия, Server Core или запуск сервера не в интерактивной сессии) это типично: у воркера нет интерактивного рабочего стола. Это штатная проблема DSH, не связана с плагином. **Решение — переключить на браузерный выбор папки** (работает везде, в т.ч. по RDP): добавьте в `%USERPROFILE%\.dsh\profiles\web\cordis.patch.yml` и перезапустите `dsh web`:
   ```yaml
   - id: directory-picker
     disabled: true
@@ -196,7 +196,7 @@ dsh web
       - id: directory-picker-browse
         name: '@deepseek-ai/dsh-host-directory-picker-browse'
   ```
-  Либо, если нужен именно нативный диалог, почините koffi: проверьте `cd %USERPROFILE%\.dsh\profiles && node -e "import('koffi').then(()=>console.log('koffi ok')).catch(e=>console.log('broken:',e.message))"` и при ошибке переустановите зависимости профиля (`dsh plugin --profile web install`, нужен pnpm) или используйте Node 22. |
+  На обычной рабочей станции (Windows 10/11, интерактивная сессия) причина обычно в koffi: проверьте `cd %USERPROFILE%\.dsh\profiles && node -e "import('koffi').then(()=>console.log('koffi ok')).catch(e=>console.log('broken:',e.message))"` и при ошибке переустановите зависимости профиля (`dsh plugin --profile web install`, нужен pnpm) или используйте Node 22. |
 
 ---
 

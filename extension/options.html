@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DSH Browser Bridge — Options</title>
+  <style>
+    body { font-family: system-ui, sans-serif; font-size: 14px; max-width: 560px; margin: 24px auto; padding: 0 16px; color: #1f2328; }
+    h1 { font-size: 18px; }
+    label { display: block; margin-top: 14px; font-weight: 600; }
+    input[type=text] { width: 100%; padding: 8px; border: 1px solid #d0d7de; border-radius: 6px; margin-top: 4px; box-sizing: border-box; font-size: 13px; }
+    .hint { color: #57606a; font-size: 12px; margin-top: 4px; }
+    .row { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+    button { margin-top: 18px; padding: 8px 16px; border: 1px solid #d0d7de; border-radius: 6px; background: #f6f8fa; cursor: pointer; font-size: 13px; }
+    button.primary { background: #4d6bfe; border-color: #4d6bfe; color: #fff; }
+    #msg { margin-top: 12px; font-size: 13px; white-space: pre-wrap; }
+    .ok { color: #1a7f37; }
+    .err { color: #cf222e; }
+  </style>
+</head>
+<body>
+  <h1>DSH Browser Bridge</h1>
+  <p class="hint">The bridge server runs inside the DeepSeek Harness (<code>dsh web</code>). This extension connects to it over a local WebSocket. The default URL works when dsh runs on port 3080.</p>
+
+  <label for="bridgeUrl">Bridge WebSocket URL</label>
+  <input type="text" id="bridgeUrl" placeholder="ws://127.0.0.1:3080/bridge">
+  <div class="hint">Format: <code>ws://127.0.0.1:&lt;port&gt;/bridge</code> — same host/port as the dsh web UI you opened.</div>
+
+  <div class="row">
+    <input type="checkbox" id="autoConnect" checked>
+    <label for="autoConnect" style="margin:0; font-weight:400;">Auto-connect when the browser starts</label>
+  </div>
+
+  <div>
+    <button class="primary" id="save">Save</button>
+    <button id="test">Test connection</button>
+  </div>
+
+  <div id="msg"></div>
+
+  <script src="options.js"></script>
+</body>
+</html>

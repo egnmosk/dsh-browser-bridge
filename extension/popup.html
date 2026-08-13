@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DSH Browser Bridge</title>
+  <style>
+    body { font-family: system-ui, sans-serif; font-size: 13px; width: 280px; margin: 0; padding: 12px; color: #1f2328; }
+    h1 { font-size: 14px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+    h1 img { width: 18px; height: 18px; }
+    .status { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; margin-bottom: 10px; background: #f6f8fa; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+    .dot.ok { background: #2da44e; }
+    .dot.bad { background: #cf222e; }
+    .dot.mid { background: #bf8700; }
+    #detail { color: #57606a; word-break: break-all; }
+    button { width: 100%; margin-top: 6px; padding: 7px; border: 1px solid #d0d7de; border-radius: 6px; background: #f6f8fa; cursor: pointer; font-size: 12px; }
+    button:hover { background: #eaeef2; }
+    #preview { margin-top: 10px; border-top: 1px solid #d0d7de; padding-top: 8px; }
+    #previewText { white-space: pre-wrap; max-height: 140px; overflow: auto; color: #24292f; font-size: 12px; }
+    .muted { color: #57606a; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <h1><img src="icons/icon32.png" alt="">DSH Browser Bridge</h1>
+  <div class="status">
+    <span class="dot mid" id="dot"></span>
+    <div>
+      <div id="state">Checking…</div>
+      <div class="muted" id="detail"></div>
+    </div>
+  </div>
+  <button id="connect">Reconnect</button>
+  <button id="read">Read this page</button>
+  <div id="preview" hidden>
+    <div class="muted">Page preview:</div>
+    <div id="previewText"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

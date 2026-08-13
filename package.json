@@ -1,0 +1,33 @@
+{
+  "name": "dsh-browser-bridge",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness plugin + browser extension bridge: lets DSH agents read and control the user's browser, like Kimi WebBridge or Claude's browser extension. Node side: browser_* tools over a localhost WebSocket; browser side: a Manifest V3 extension.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "plugin",
+    "browser",
+    "bridge",
+    "webbridge",
+    "chrome-extension",
+    "browser-extension",
+    "agent"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-tools": ">=0.1.0"
+  }
+}

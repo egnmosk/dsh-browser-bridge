@@ -1,0 +1,15 @@
+# machine-specific artifacts (logs, local scripts, transfer zips)
+/local/
+*.log
+dump-config.txt
+restart-done.txt
+*.zip
+
+# dependencies / test junk
+node_modules/
+test/fakehome/
+
+# editor / OS
+.vscode/
+.idea/
+Thumbs.db

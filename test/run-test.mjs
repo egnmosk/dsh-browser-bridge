@@ -32,6 +32,29 @@ function check(label, cond, extra = "") {
 	}
 }
 
+// Walk a candidate tool result and reject anything that is not lossless JSON
+// (undefined values, non-finite numbers, functions, cycles).
+function assertLossless(value, seen = new Set()) {
+	if (value === null) return true;
+	const t = typeof value;
+	if (t === "string" || t === "boolean") return true;
+	if (t === "number") return Number.isFinite(value) && !Object.is(value, -0);
+	if (t !== "object") return false;
+	if (seen.has(value)) return false;
+	seen.add(value);
+	if (Array.isArray(value)) {
+		for (const item of value) if (!assertLossless(item, seen)) return false;
+		return true;
+	}
+	const proto = Object.getPrototypeOf(value);
+	if (proto !== Object.prototype && proto !== null) return false;
+	for (const [k, v] of Object.entries(value)) {
+		if (v === undefined) return false;
+		if (!assertLossless(v, seen)) return false;
+	}
+	return true;
+}
+
 // ---- fake extension client -------------------------------------------------
 function makeClient(port, behavior = {}) {
 	return new Promise((resolve, reject) => {
@@ -283,6 +306,12 @@ async function main() {
 
 		const ev = await tools.find((t) => t.name === "browser_eval").execute({ expression: "document.querySelector('h1').textContent" }, exec);
 		check("browser_eval", ev.result?.h1 === "Example Domain");
+
+		// every tool result must be lossless JSON (no undefined values) — the
+		// runtime snapshots results and rejects undefined-valued properties
+		for (const [label, value] of [["status", status], ["listTabs", tabs], ["activate", act], ["navigate", nav], ["snapshot", snap], ["readPage", read], ["click", click], ["type", type], ["press", press], ["scroll", scroll], ["wait", wait], ["screenshot", shot], ["eval", ev]]) {
+			check(`lossless JSON: ${label}`, assertLossless(value), JSON.stringify(value).slice(0, 120));
+		}
 
 		// extension error path
 		const clientErr = await makeClient(port, { respond: () => "error" });

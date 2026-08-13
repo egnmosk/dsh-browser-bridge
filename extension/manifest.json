@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "DSH Browser Bridge",
   "version": "0.1.0",
-  "description": "Bridges this browser to the DeepSeek Harness (dsh) so DSH agents can read and control it — like Kimi WebBridge / Claude's browser extension.",
+  "description": "Bridges this browser to the DeepSeek Harness (dsh) so DSH agents can read and control it - like Kimi WebBridge / Claude's browser extension.",
   "permissions": ["tabs", "activeTab", "scripting", "storage"],
   "host_permissions": ["<all_urls>"],
   "background": {

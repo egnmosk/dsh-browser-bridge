@@ -1,4 +1,4 @@
-// DSH Browser Bridge — options page.
+// DSH Browser Bridge - options page.
 
 const DEFAULTS = { bridgeUrl: "ws://127.0.0.1:3080/bridge", autoConnect: true };
 const urlEl = document.getElementById("bridgeUrl");
@@ -29,7 +29,7 @@ document.getElementById("save").addEventListener("click", async () => {
 
 document.getElementById("test").addEventListener("click", async () => {
   let url = urlEl.value.trim();
-  setMsg("Testing…", "");
+  setMsg("Testing...", "");
   try {
     const httpUrl = url.replace(/^ws/, "http") + "/info";
     const res = await fetch(httpUrl, { cache: "no-store" });

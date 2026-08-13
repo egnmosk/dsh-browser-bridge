@@ -1,4 +1,4 @@
-// DSH Browser Bridge — popup.
+// DSH Browser Bridge - popup.
 
 const stateEl = document.getElementById("state");
 const detailEl = document.getElementById("detail");
@@ -28,7 +28,7 @@ document.getElementById("connect").addEventListener("click", () => {
 
 document.getElementById("read").addEventListener("click", () => {
   previewEl.hidden = false;
-  previewTextEl.textContent = "Reading…";
+  previewTextEl.textContent = "Reading...";
   chrome.runtime.sendMessage({ type: "bridge:readPage", maxChars: 900 }, (res) => {
     if (chrome.runtime.lastError) {
       previewTextEl.textContent = "Error: " + chrome.runtime.lastError.message;

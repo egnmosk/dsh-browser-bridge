@@ -49,7 +49,7 @@ const CANNED = {
   activateTab: (args) => ({ tab: { id: args.tabId, title: "Example", url: "https://example.com", active: true, windowId: 1, index: 1 } }),
   navigate: (args) => ({ tab: { id: 2, title: "Example", url: args.url, active: false, windowId: 1, index: 1 } }),
   snapshot: { url: "https://example.com", title: "Example Domain", elements: [{ tag: "button", text: "More information", selector: "#more", role: "button" }], truncated: false },
-  readPage: { url: "https://example.com", title: "Example Domain", text: "Example Domain — This domain is for use in illustrative examples.", truncated: false },
+  readPage: { url: "https://example.com", title: "Example Domain", text: "Example Domain - This domain is for use in illustrative examples.", truncated: false },
   click: { tag: "button", text: "More information" },
   type: {},
   press: {},
@@ -65,7 +65,7 @@ socket.on("data", (chunk) => {
     if (idx === -1) return;
     buf = buf.subarray(idx + 4);
     handshaken = true;
-    log("handshake 101 OK — sending hello");
+    log("handshake 101 OK - sending hello");
     sendText({ type: "hello", protocol: 1, name: "dsh-browser-bridge-extension", version: "live-test" });
   }
   for (;;) {

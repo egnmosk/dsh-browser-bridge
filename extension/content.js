@@ -1,4 +1,4 @@
-// DSH Browser Bridge — content script.
+// DSH Browser Bridge - content script.
 //
 // Runs in every page (top frame only answers; iframes stay silent) and carries
 // out page-level commands from the background service worker: read, snapshot,
@@ -9,7 +9,7 @@
 
   if (window.top !== window) return; // only the top frame answers
 
-  // ── helpers ──────────────────────────────────────────────────────────────────
+  // -- helpers ------------------------------------------------------------------
 
   function findEl(selector) {
     if (!selector) throw new Error("missing selector");
@@ -28,7 +28,7 @@
 
   function textOf(el, max) {
     const t = (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
-    return t.length > max ? t.slice(0, max) + "…" : t;
+    return t.length > max ? t.slice(0, max) + "..." : t;
   }
 
   function cssPath(el) {
@@ -49,7 +49,7 @@
       node = parent;
     }
     const path = parts.join(" > ");
-    return path.length > 200 ? path.slice(0, 200) + "…" : path;
+    return path.length > 200 ? path.slice(0, 200) + "..." : path;
   }
 
   function serialize(value, depth) {
@@ -79,7 +79,7 @@
     return { value: String(value), serialized: true };
   }
 
-  // ── commands ─────────────────────────────────────────────────────────────────
+  // -- commands -----------------------------------------------------------------
 
   function readPage(args) {
     const root = args.selector ? findEl(args.selector) : document.body;
@@ -285,7 +285,7 @@
 
   const API = { readPage, snapshot, click, type, press, scroll, wait, eval: evalInPage };
 
-  // ── message bridge ──────────────────────────────────────────────────────────
+  // -- message bridge ----------------------------------------------------------
 
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (!msg || typeof msg !== "object" || typeof msg.cmd !== "string") return;

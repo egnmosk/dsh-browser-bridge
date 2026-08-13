@@ -1,4 +1,4 @@
-// dsh-browser-bridge — standalone protocol test.
+// dsh-browser-bridge - standalone protocol test.
 //
 // Boots a real node:http server with the plugin's WS upgrade handler, a fake
 // extension client speaking raw RFC 6455 (masked frames), and the plugin's
@@ -307,7 +307,7 @@ async function main() {
 		const ev = await tools.find((t) => t.name === "browser_eval").execute({ expression: "document.querySelector('h1').textContent" }, exec);
 		check("browser_eval", ev.result?.h1 === "Example Domain");
 
-		// every tool result must be lossless JSON (no undefined values) — the
+		// every tool result must be lossless JSON (no undefined values) - the
 		// runtime snapshots results and rejects undefined-valued properties
 		for (const [label, value] of [["status", status], ["listTabs", tabs], ["activate", act], ["navigate", nav], ["snapshot", snap], ["readPage", read], ["click", click], ["type", type], ["press", press], ["scroll", scroll], ["wait", wait], ["screenshot", shot], ["eval", ev]]) {
 			check(`lossless JSON: ${label}`, assertLossless(value), JSON.stringify(value).slice(0, 120));

@@ -1,4 +1,4 @@
-// DSH Browser Bridge — background service worker (MV3).
+// DSH Browser Bridge - background service worker (MV3).
 //
 // Maintains the WebSocket connection to the DeepSeek Harness bridge server,
 // reconnects with backoff, and executes commands from the server against the
@@ -21,7 +21,7 @@ let reconnectTimer = null;
 let status = { state: "idle", server: null, error: null, since: 0 };
 let inflight = 0;
 
-// ── lifecycle ────────────────────────────────────────────────────────────────
+// -- lifecycle ----------------------------------------------------------------
 
 chrome.runtime.onInstalled.addListener(init);
 chrome.runtime.onStartup.addListener(init);
@@ -45,7 +45,7 @@ async function init() {
   if (config.autoConnect) connect();
 }
 
-// ── internal messaging (popup / options) ─────────────────────────────────────
+// -- internal messaging (popup / options) -------------------------------------
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (!msg || typeof msg !== "object") return;
@@ -71,7 +71,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   }
 });
 
-// ── websocket connection ─────────────────────────────────────────────────────
+// -- websocket connection -----------------------------------------------------
 
 function setStatus(state, extra) {
   status = { state, server: extra?.server ?? status.server, error: extra?.error ?? null, since: Date.now() };
@@ -179,7 +179,7 @@ function scheduleReconnect() {
   reconnectDelayMs = Math.min(reconnectDelayMs * 2, 30000);
 }
 
-// ── command dispatch ─────────────────────────────────────────────────────────
+// -- command dispatch ---------------------------------------------------------
 
 async function handleRequest(cmd, args) {
   switch (cmd) {
@@ -320,7 +320,7 @@ function waitForTabComplete(tabId, timeoutMs = 20000) {
   });
 }
 
-// ── popup helper: read the active tab ────────────────────────────────────────
+// -- popup helper: read the active tab ----------------------------------------
 
 async function readActiveTabPreview(maxChars) {
   const tabId = await activeTabId();
@@ -332,7 +332,7 @@ async function readActiveTabPreview(maxChars) {
   return { ok: true, url: v.url, title: v.title, text: v.text, tabId };
 }
 
-// ── image header helpers (no Buffer in MV3 service workers) ──────────────────
+// -- image header helpers (no Buffer in MV3 service workers) ------------------
 
 function base64ToBytes(b64) {
   const bin = atob(b64);

@@ -1,0 +1,10 @@
+# Overlay for machines where the native win32 folder dialog worker fails
+# ("directory picker failed: win32 folder dialog worker exited before reporting
+# a result"). Swaps the adaptive picker for the browser-based browse backend,
+# which needs no native modules. Verify: dsh --profile web --patch <this> --dump-config
+- id: directory-picker
+  disabled: true
+
+- insert:
+    - id: directory-picker-browse
+      name: '@deepseek-ai/dsh-host-directory-picker-browse'

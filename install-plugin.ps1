@@ -9,6 +9,27 @@ param(
 )
 $ErrorActionPreference = "Stop"
 
+# Write text as UTF-8 WITHOUT a BOM. PowerShell 5.1's Set-Content -Encoding UTF8
+# writes a byte-order mark, and dsh's readProfileManifest JSON.parse rejects it
+# ("SyntaxError: Unexpected token '\uFEFF'"). Every profile file we touch must
+# be BOM-free.
+function Write-Utf8NoBom([string]$Path, [string]$Text) {
+  $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+  [System.IO.File]::WriteAllText($Path, $Text, $utf8NoBom)
+}
+
+# Strip a UTF-8 BOM from an existing file (fixes files written by older
+# versions of this script or by Set-Content). Safe to call on any file.
+function Remove-Bom([string]$Path) {
+  if (-not (Test-Path $Path)) { return }
+  $bytes = [System.IO.File]::ReadAllBytes($Path)
+  if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+    $rest = [System.Text.Encoding]::UTF8.GetString($bytes, 3, $bytes.Length - 3)
+    Write-Utf8NoBom $Path $rest
+    Write-Host "  stripped UTF-8 BOM from $Path"
+  }
+}
+
 $dshHome = if ($env:DSH_HOME) { $env:DSH_HOME } else { Join-Path $env:USERPROFILE ".dsh" }
 $profilesDir = Join-Path $dshHome "profiles"
 if (-not (Test-Path $profilesDir)) {
@@ -69,7 +90,7 @@ if (-not (Test-Path $patchFile)) {
       $trimmed = $trimmed.Substring(0, $trimmed.Length - 2).TrimEnd()
     }
     $new = $trimmed + "`r`n" + $block.TrimStart("`r", "`n") + "`r`n"
-    Set-Content -Path $patchFile -Value $new -Encoding UTF8
+    Write-Utf8NoBom $patchFile $new
     Write-Host "Registered browser-bridge in $patchFile"
   }
 }
@@ -85,7 +106,7 @@ if (Test-Path $profilePkg) {
         $json | Add-Member -NotePropertyName dependencies -NotePropertyValue ([ordered]@{}) -Force
       }
       $json.dependencies | Add-Member -NotePropertyName 'dsh-browser-bridge' -NotePropertyValue '0.1.0' -Force
-      $json | ConvertTo-Json -Depth 10 | Set-Content $profilePkg -Encoding UTF8
+      Write-Utf8NoBom $profilePkg ($json | ConvertTo-Json -Depth 10)
       Write-Host "Recorded dsh-browser-bridge in $profilePkg"
     } else {
       Write-Host "dsh-browser-bridge already listed in $profilePkg dependencies."
@@ -96,6 +117,10 @@ if (Test-Path $profilePkg) {
 } else {
   Write-Warning "No $profilePkg found (not critical: the plugin loads via cordis.patch.yml alone)."
 }
+
+# --- normalize: strip any UTF-8 BOM left by earlier runs / Set-Content ------------
+Remove-Bom $patchFile
+Remove-Bom $profilePkg
 
 Write-Host ""
 Write-Host "Done. Next steps:"
